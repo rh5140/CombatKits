@@ -3,11 +3,22 @@
 
 #include "Character/CombatCharacter.h"
 
+#include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+
 // Sets default values
 ACombatCharacter::ACombatCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+ 	// Create spring arm
+	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
+	SpringArmComponent->SetupAttachment(RootComponent);
+	SpringArmComponent->TargetArmLength = 300.f;
+	SpringArmComponent->bUsePawnControlRotation = true;
+
+	// Create camera
+	FollowCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
+	FollowCameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
+	FollowCameraComponent->bUsePawnControlRotation = false;
 
 }
 
@@ -18,10 +29,35 @@ void ACombatCharacter::BeginPlay()
 	
 }
 
-// Called every frame
-void ACombatCharacter::Tick(float DeltaTime)
+// Move forward and backward
+void ACombatCharacter::MoveForward(float Value)
 {
-	Super::Tick(DeltaTime);
+	if ((Controller != nullptr) && (Value != 0.f))
+	{
+		const FRotator Rotation{ Controller->GetControlRotation() };
+
+		const FRotator YawRotation{ 0, Rotation.Yaw, 0 };
+
+		const FVector Direction{ FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X) };
+
+		AddMovementInput(Direction, Value);
+	}
+
+}
+
+// Move right and left
+void ACombatCharacter::MoveRight(float Value)
+{
+	if ((Controller != nullptr) && (Value != 0.f))
+	{
+		const FRotator Rotation{ Controller->GetControlRotation() };
+
+		const FRotator YawRotation{ 0, Rotation.Yaw, 0 };
+
+		const FVector Direction{ FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y) };
+
+		AddMovementInput(Direction, Value);
+	}
 
 }
 
@@ -30,5 +66,11 @@ void ACombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	// Make sure component is valid
+	check(PlayerInputComponent);
+
+	// Player movement
+	PlayerInputComponent->BindAxis("MoveForward", this, &ACombatCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &ACombatCharacter::MoveRight);
 }
 
