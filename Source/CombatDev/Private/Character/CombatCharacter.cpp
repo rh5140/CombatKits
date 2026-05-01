@@ -5,9 +5,12 @@
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
-ACombatCharacter::ACombatCharacter()
+ACombatCharacter::ACombatCharacter():
+	WalkSpeed(300.f),
+	RunSpeed(600.f)
 {
  	// Create spring arm
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
@@ -19,6 +22,10 @@ ACombatCharacter::ACombatCharacter()
 	FollowCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
 	FollowCameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
 	FollowCameraComponent->bUsePawnControlRotation = false;
+
+	// Jumping
+	GetCharacterMovement()->JumpZVelocity = 500.f;
+	GetCharacterMovement()->AirControl = 0.1f;
 
 }
 
@@ -61,6 +68,21 @@ void ACombatCharacter::MoveRight(float Value)
 
 }
 
+void ACombatCharacter::Running()
+{
+	if (GetCharacterMovement()->GetCurrentAcceleration().Size() > 0.0f)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = RunSpeed;
+	}
+
+}
+
+void ACombatCharacter::StopRunning()
+{
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+
+}
+
 // Called to bind functionality to input
 void ACombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -72,5 +94,12 @@ void ACombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	// Player movement
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACombatCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACombatCharacter::MoveRight);
+
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
+	PlayerInputComponent->BindAction("Running", IE_Pressed, this, &ACombatCharacter::Running);
+	PlayerInputComponent->BindAction("Running", IE_Released, this, &ACombatCharacter::StopRunning);
+
 }
 

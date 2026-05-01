@@ -32,6 +32,13 @@ protected:
 	// Move left and right
 	void MoveRight(float Value);
 
+	// Start and stop running
+	void Running();
+	void StopRunning();
+
+	// LMB main attack
+	void MainAttack();
+
 private:	
 	// Spring Arm Component
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera", meta=(AllowPrivateAccess="true"))
@@ -40,5 +47,13 @@ private:
 	// Follow Camera Component
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCameraComponent;
+
+	// Set Walk Speed
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	float WalkSpeed;
+
+	// Set Run Speed
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	float RunSpeed;
 
 };
