@@ -32,6 +32,12 @@ protected:
 	// Move left and right
 	void MoveRight(float Value);
 
+	// Input to turn at normalized rate given
+	void TurnRate(float rate);
+
+	// Input to lookup or down at normalized rate given
+	void LookUpRate(float rate);
+
 	// Start and stop running
 	void Running();
 	void StopRunning();
@@ -47,6 +53,14 @@ private:
 	// Follow Camera Component
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCameraComponent;
+
+	// Default turn rate in degrees per delta time
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float DefaultTurnRate;
+
+	// Default lookup rate in degrees per delta time
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+	float DefaultLookUpRate;
 
 	// Set Walk Speed
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))

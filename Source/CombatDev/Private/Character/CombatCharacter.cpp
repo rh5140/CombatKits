@@ -9,6 +9,8 @@
 
 // Sets default values
 ACombatCharacter::ACombatCharacter():
+	DefaultTurnRate(45.f),
+	DefaultLookUpRate(45.f),
 	WalkSpeed(300.f),
 	RunSpeed(600.f)
 {
@@ -68,6 +70,20 @@ void ACombatCharacter::MoveRight(float Value)
 
 }
 
+void ACombatCharacter::TurnRate(float Rate)
+{
+	// Turning degrees per delta seconds
+	AddControllerYawInput(Rate * DefaultTurnRate * GetWorld()->GetDeltaSeconds());
+
+}
+
+void ACombatCharacter::LookUpRate(float Rate)
+{
+	// Lookup rate per delta seconds
+	AddControllerPitchInput(Rate * DefaultLookUpRate * GetWorld()->GetDeltaSeconds());
+
+}
+
 void ACombatCharacter::Running()
 {
 	if (GetCharacterMovement()->GetCurrentAcceleration().Size() > 0.0f)
@@ -94,6 +110,9 @@ void ACombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	// Player movement
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACombatCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACombatCharacter::MoveRight);
+
+	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
