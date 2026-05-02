@@ -35,4 +35,12 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"));
 	float Speed;
 
+	// T/F if player is in air
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"));
+	bool bIsInAir;
+
+	// Movement offset Yaw
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"));
+	float MovementOffsetYaw;
+
 };

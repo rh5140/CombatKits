@@ -2,7 +2,6 @@
 
 
 #include "Character/CombatCharacter.h"
-
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -24,6 +23,16 @@ ACombatCharacter::ACombatCharacter():
 	FollowCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
 	FollowCameraComponent->SetupAttachment(SpringArmComponent, USpringArmComponent::SocketName);
 	FollowCameraComponent->bUsePawnControlRotation = false;
+
+	// Set up pitch, yaw, roll
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = true;
+	bUseControllerRotationRoll = false;
+
+	// Configure character movement
+	// Only rotate yaw
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 540.f, 0.f);
 
 	// Jumping
 	GetCharacterMovement()->JumpZVelocity = 500.f;
