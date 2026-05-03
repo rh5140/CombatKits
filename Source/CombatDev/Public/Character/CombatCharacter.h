@@ -9,6 +9,7 @@
 // Declarations
 class USpringArmComponent;
 class UCameraComponent;
+class UAnimMontage;
 
 UCLASS()
 class COMBATDEV_API ACombatCharacter : public ACharacter
@@ -42,32 +43,39 @@ protected:
 	void Running();
 	void StopRunning();
 
+	// Recall ability
+	void Recall();
+
+	// Disable movement and play montage
+	void PlayAnimMontage(UAnimMontage* MontageToPlay, FName SectionName = "Default");
+
+	void EnableWalk();
+
 	// LMB main attack
 	void MainAttack();
 
 private:	
-	// Spring Arm Component
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera", meta=(AllowPrivateAccess="true"))
 	USpringArmComponent* SpringArmComponent;
 
-	// Follow Camera Component
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCameraComponent;
 
-	// Default turn rate in degrees per delta time
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	float DefaultTurnRate;
 
-	// Default lookup rate in degrees per delta time
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	float DefaultLookUpRate;
 
-	// Set Walk Speed
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float WalkSpeed;
 
-	// Set Run Speed
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float RunSpeed;
 
+	// Timer handle to disable movement during montages
+	FTimerHandle TimerMovementWalking;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* RecallMontage;
 };

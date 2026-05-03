@@ -110,7 +110,7 @@ void ACombatCharacter::StopRunning()
 
 void ACombatCharacter::Recall()
 {
-	PlayAnimMontage(RecallMontage, "Recall");
+	PlayAnimMontage(RecallMontage);
 }
 
 void ACombatCharacter::PlayAnimMontage(UAnimMontage* MontageToPlay, FName SectionName)
