@@ -38,13 +38,24 @@ ACombatCharacter::ACombatCharacter():
 	GetCharacterMovement()->JumpZVelocity = 500.f;
 	GetCharacterMovement()->AirControl = 0.1f;
 
+	RightWeaponCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Right Weapon Box"));
+	RightWeaponCollision->SetupAttachment(GetMesh(), FName("RightWeaponBone"));
+
 }
 
 // Called when the game starts or when spawned
 void ACombatCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	// Bind function to overlap event for weapon box
+	RightWeaponCollision->OnComponentBeginOverlap.AddDynamic(this, &ACombatCharacter::OnRightWeaponOverlap);
+
+	// Set up right weapon collision box
+	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	RightWeaponCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	RightWeaponCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	RightWeaponCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 }
 
 // Move forward and backward
@@ -138,6 +149,28 @@ void ACombatCharacter::EnableWalk()
 	GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 }
 
+void ACombatCharacter::MainAttack()
+{
+	PlayAnimMontage(MainAttackMontage, "MainAttack");
+}
+
+void ACombatCharacter::OnRightWeaponOverlap(UPrimitiveComponent* OverlapComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Apply Damage"));
+}
+
+void ACombatCharacter::ActivateRightWeapon()
+{
+	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Activate weapon"));
+}
+
+void ACombatCharacter::DeactivateRightWeapon()
+{
+	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Deactivate weapon"));
+}
+
 // Called to bind functionality to input
 void ACombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -161,5 +194,6 @@ void ACombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	// Combat abilities
 	PlayerInputComponent->BindAction("Recall", IE_Pressed, this, &ACombatCharacter::Recall);
+	PlayerInputComponent->BindAction("MainAttack", IE_Pressed, this, &ACombatCharacter::MainAttack);
 }
 
