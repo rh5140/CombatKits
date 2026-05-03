@@ -13,8 +13,7 @@ ACombatCharacter::ACombatCharacter():
 	DefaultTurnRate(45.f),
 	DefaultLookUpRate(45.f),
 	WalkSpeed(300.f),
-	RunSpeed(600.f),
-	BaseDamage(20.f)
+	RunSpeed(600.f)
 {
  	// Create spring arm
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
@@ -169,7 +168,7 @@ void ACombatCharacter::OnRightWeaponOverlap(UPrimitiveComponent* OverlapComponen
 		}
 
 		// Temporarily hardcoded
-		float const WeaponDamage = BaseDamage; 
+		float const WeaponDamage = 20.f; 
 
 		UGameplayStatics::ApplyDamage(
 			SweepResult.GetActor(),

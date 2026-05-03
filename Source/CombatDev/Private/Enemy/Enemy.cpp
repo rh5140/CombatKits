@@ -4,10 +4,10 @@
 #include "Enemy/Enemy.h"
 
 // Sets default values
-AEnemy::AEnemy()
+AEnemy::AEnemy() :
+	Health(100.f),
+	MaxHealth(100.f)
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
 
 }
 
@@ -23,5 +23,29 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AEnemy::MeleeHit_Implementation(FHitResult HitResult)
+{
+	// Impact sfx
+	
+	// VFX
+
+	// Hit montage
+}
+
+float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if (Health - DamageAmount < -0.f)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Enemy Dies"));
+
+	}
+	else
+	{
+		Health -= DamageAmount;
+	}
+
+	return DamageAmount;
 }
 
