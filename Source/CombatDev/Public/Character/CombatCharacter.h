@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Components/BoxComponent.h"
+#include "CombatCharacterInterface.h"
 #include "CombatCharacter.generated.h"
 
 // Declarations
@@ -13,7 +14,7 @@ class UCameraComponent;
 class UAnimMontage;
 
 UCLASS()
-class COMBATDEV_API ACombatCharacter : public ACharacter
+class COMBATDEV_API ACombatCharacter : public ACharacter, public ICombatCharacterInterface
 {
 	GENERATED_BODY()
 

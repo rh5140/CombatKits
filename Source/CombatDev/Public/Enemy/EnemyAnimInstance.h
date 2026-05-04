@@ -29,6 +29,6 @@ private:
 	float Speed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement", meta=(AllowPrivateAccess="true"))
-	float MovementOffsetTime;
+	float MovementOffsetYaw;
 	
 };

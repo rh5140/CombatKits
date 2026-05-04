@@ -18,10 +18,9 @@ void AEnemy::BeginPlay()
 	
 }
 
-// Called to bind functionality to input
-void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AEnemy::MainAttack()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Enemy ATTACK"));
 
 }
 

@@ -22,7 +22,7 @@ void UEnemyAnimInstance::UpdateAnimationProperties(float DeltaTime)
 		const FRotator AimRotation = Enemy->GetBaseAimRotation();
 		const FRotator MovementRotation = UKismetMathLibrary::MakeRotFromX(Enemy->GetVelocity());
 
-		MovementOffsetTime = UKismetMathLibrary::NormalizedDeltaRotator(MovementRotation, AimRotation).Yaw;
+		MovementOffsetYaw = UKismetMathLibrary::NormalizedDeltaRotator(MovementRotation, AimRotation).Yaw;
 	}
 }
 
