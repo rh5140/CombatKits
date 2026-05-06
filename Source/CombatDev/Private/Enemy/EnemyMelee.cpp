@@ -93,25 +93,21 @@ void AEnemyMelee::MeleeMainAttack()
 void AEnemyMelee::ActivateRightWeapon()
 {
 	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Activate right weapon"));
 }
 
 void AEnemyMelee::DeactivateRightWeapon()
 {
 	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Deactivate right weapon"));
 }
 
 void AEnemyMelee::ActivateLeftWeapon()
 {
 	LeftWeaponCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Activate left weapon"));
 }
 
 void AEnemyMelee::DeactivateLeftWeapon()
 {
 	LeftWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Deactivate left weapon"));
 }
 
 void AEnemyMelee::OnRightWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -119,8 +115,6 @@ void AEnemyMelee::OnRightWeaponOverlap(UPrimitiveComponent* OverlappedComponent,
 	if (OtherActor == nullptr) return;
 	if (OtherActor->IsA(ACombatCharacter::StaticClass()))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Right Weapon Hit Player"));
-
 		// Temporarily hardcoded
 		float const WeaponDamage = RightWeaponDamage;
 
@@ -138,8 +132,6 @@ void AEnemyMelee::OnLeftWeaponOverlap(UPrimitiveComponent* OverlappedComponent, 
 	if (OtherActor == nullptr) return;
 	if (OtherActor->IsA(ACombatCharacter::StaticClass()))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Left Weapon Hit Player"));
-
 		// Temporarily hardcoded
 		float const WeaponDamage = LeftWeaponDamage;
 

@@ -33,6 +33,9 @@ protected:
 	UPROPERTY()
 	AEnemyAIController* AIController;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void DeathOfEnemy();
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta=(AllowPrivateAccess="true"))
 	FName EnemyName;

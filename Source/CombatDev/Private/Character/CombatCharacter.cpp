@@ -185,26 +185,25 @@ void ACombatCharacter::OnRightWeaponOverlap(UPrimitiveComponent* OverlapComponen
 void ACombatCharacter::ActivateRightWeapon()
 {
 	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Activate weapon"));
 }
 
 void ACombatCharacter::DeactivateRightWeapon()
 {
 	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Deactivate weapon"));
 }
 
 float ACombatCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	if (Health - DamageAmount < -0.f)
+	Health -= DamageAmount;
+	if (Health - DamageAmount <= 0.f)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Dies"));
+		Health = 0;
 
-	}
-	else
-	{
-		Health -= DamageAmount;
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Health: " + FString::SanitizeFloat(Health)));
+		GetMesh()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		DeathOfPlayer(); // Implemented in BP
+
 	}
 
 	return DamageAmount;

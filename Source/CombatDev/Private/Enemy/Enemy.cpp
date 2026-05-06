@@ -22,7 +22,7 @@ void AEnemy::BeginPlay()
 
 void AEnemy::MainAttack()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Enemy ATTACK"));
+	
 
 }
 
@@ -37,15 +37,16 @@ void AEnemy::MeleeHit_Implementation(FHitResult HitResult)
 
 float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	if (Health - DamageAmount < -0.f)
+	Health -= DamageAmount;
+	if (Health - DamageAmount <= 0.f)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Enemy Dies"));
+		GetMesh()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+		DeathOfEnemy(); // Implemented in BP
 	}
 	else
-	{;
-		Health -= DamageAmount;
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Enemy Health: " + FString::SanitizeFloat(Health)))
+	{
 	}
 
 	return DamageAmount;
