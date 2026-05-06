@@ -4,9 +4,12 @@
 
 #include "Components/BoxComponent.h"
 #include "CoreMinimal.h"
+#include "EnemyAIController.h"
 #include "GameFramework/Character.h"
 #include "MeleeHitInterface.h"
 #include "Enemy.generated.h"
+
+class EnemyAIController;
 
 UCLASS()
 class COMBATDEV_API AEnemy : public ACharacter, public IMeleeHitInterface
@@ -27,6 +30,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
+	AEnemyAIController* AIController;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta=(AllowPrivateAccess="true"))

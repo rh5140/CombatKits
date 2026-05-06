@@ -43,9 +43,9 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 
 	}
 	else
-	{;
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Enemy Health: " + FString::SanitizeFloat(Health)));
 		Health -= DamageAmount;
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Enemy Health: " + FString::SanitizeFloat(Health)))
 	}
 
 	return DamageAmount;

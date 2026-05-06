@@ -2,12 +2,20 @@
 
 
 #include "Enemy/EnemyMelee.h"
+#include "Character/CombatCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "UObject/UObjectBaseUtility.h"
 
-AEnemyMelee::AEnemyMelee()
+AEnemyMelee::AEnemyMelee() :
+	RightWeaponDamage(10.f),
+	LeftWeaponDamage(10.f)
 {
 	RightWeaponCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Right Weapon Box"));
-	RightWeaponCollision->SetupAttachment(GetMesh(), FName("RightWeaponBone"));
+	RightWeaponCollision->SetupAttachment(GetMesh(), FName("RightWeaponSocket"));
+
+	LeftWeaponCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Left Weapon Box"));
+	LeftWeaponCollision->SetupAttachment(GetMesh(), FName("LeftWeaponSocket"));
 }
 
 void AEnemyMelee::BeginPlay()
@@ -15,11 +23,17 @@ void AEnemyMelee::BeginPlay()
 	Super::BeginPlay();
 
 	RightWeaponCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemyMelee::OnRightWeaponOverlap);
+	SetUpCollisionBox(RightWeaponCollision);
+	LeftWeaponCollision->OnComponentBeginOverlap.AddDynamic(this, &AEnemyMelee::OnLeftWeaponOverlap);
+	SetUpCollisionBox(LeftWeaponCollision);
+}
 
-	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	RightWeaponCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-	RightWeaponCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	RightWeaponCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+void AEnemyMelee::SetUpCollisionBox(UBoxComponent* WeaponCollision)
+{
+	WeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	WeaponCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	WeaponCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	WeaponCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 }
 
 // Play random enemy attack montage
@@ -79,19 +93,61 @@ void AEnemyMelee::MeleeMainAttack()
 void AEnemyMelee::ActivateRightWeapon()
 {
 	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Activate weapon"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Activate right weapon"));
 }
 
 void AEnemyMelee::DeactivateRightWeapon()
 {
 	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Deactivate weapon"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Deactivate right weapon"));
+}
+
+void AEnemyMelee::ActivateLeftWeapon()
+{
+	LeftWeaponCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Activate left weapon"));
+}
+
+void AEnemyMelee::DeactivateLeftWeapon()
+{
+	LeftWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Deactivate left weapon"));
 }
 
 void AEnemyMelee::OnRightWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (IsValid(SweepResult.GetActor()))
+	if (OtherActor == nullptr) return;
+	if (OtherActor->IsA(ACombatCharacter::StaticClass()))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Hit Player"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Right Weapon Hit Player"));
+
+		// Temporarily hardcoded
+		float const WeaponDamage = RightWeaponDamage;
+
+		UGameplayStatics::ApplyDamage(
+			OtherActor,
+			WeaponDamage,
+			AIController,
+			this,
+			UDamageType::StaticClass());
+	}
+}
+
+void AEnemyMelee::OnLeftWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor == nullptr) return;
+	if (OtherActor->IsA(ACombatCharacter::StaticClass()))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Left Weapon Hit Player"));
+
+		// Temporarily hardcoded
+		float const WeaponDamage = LeftWeaponDamage;
+
+		UGameplayStatics::ApplyDamage(
+			OtherActor,
+			WeaponDamage,
+			AIController,
+			this,
+			UDamageType::StaticClass());
 	}
 }

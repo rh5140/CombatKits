@@ -203,8 +203,8 @@ float ACombatCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	}
 	else
 	{
-		Health -= DamageAmount;
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Player Health: " + FString::SanitizeFloat(Health)));
+		Health -= DamageAmount;
 	}
 
 	return DamageAmount;
