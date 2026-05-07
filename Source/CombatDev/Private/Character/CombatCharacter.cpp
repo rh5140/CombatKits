@@ -61,6 +61,14 @@ void ACombatCharacter::BeginPlay()
 	RightWeaponCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
 	RightWeaponCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	RightWeaponCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+
+	// TODO: Cache AnimInstance in BeginPlay instead of calling at runtime
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance != nullptr)
+	{
+		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this, &ACombatCharacter::HandleOnMontageNotifyBegin);
+
+	}
 }
 
 // Move forward and backward
@@ -131,6 +139,7 @@ void ACombatCharacter::Recall()
 
 void ACombatCharacter::PlayAnimMontage(UAnimMontage* MontageToPlay, FName SectionName)
 {
+	// TODO: Cache AnimInstance in BeginPlay instead of calling at runtime
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && MontageToPlay)
 	{
@@ -156,7 +165,36 @@ void ACombatCharacter::EnableWalk()
 
 void ACombatCharacter::MainAttack()
 {
-	PlayAnimMontage(MainAttackMontage, "MainAttack");
+	// TODO: Cache AnimInstance in BeginPlay instead of calling at runtime
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && MainAttackMontage)
+	{
+		if (!AnimInstance->Montage_IsPlaying(MainAttackMontage))
+		{
+			AnimInstance->Montage_Play(MainAttackMontage);
+
+			// GetWorldTimerManager().SetTimer(TimerMovementWalking, this, &ACombatCharacter::EnableWalk, SectionLength);
+		}
+		else
+		{
+			m_iCombatAttackIndex = 1;
+		}
+	}
+}
+
+void ACombatCharacter::HandleOnMontageNotifyBegin(FName a_nNotifyName, const FBranchingPointNotifyPayload& a_pBranchingPayload)
+{
+	m_iCombatAttackIndex--;
+
+	if (m_iCombatAttackIndex < 0)
+	{
+		// TODO: Cache AnimInstance in BeginPlay instead of calling at runtime
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if (AnimInstance != nullptr)
+		{
+			AnimInstance->Montage_Stop(0.f, MainAttackMontage);
+		}
+	}
 }
 
 void ACombatCharacter::OnRightWeaponOverlap(UPrimitiveComponent* OverlapComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

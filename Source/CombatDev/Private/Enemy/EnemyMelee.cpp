@@ -39,6 +39,7 @@ void AEnemyMelee::SetUpCollisionBox(UBoxComponent* WeaponCollision)
 // Play random enemy attack montage
 void AEnemyMelee::MeleeAttack()
 {
+	// TODO: Cache ref to AnimInstance in BeginPlay()
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 
 	if (AnimInstance && MeleeAttackMontage)
@@ -142,4 +143,31 @@ void AEnemyMelee::OnLeftWeaponOverlap(UPrimitiveComponent* OverlappedComponent, 
 			this,
 			UDamageType::StaticClass());
 	}
+}
+
+float AEnemyMelee::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	// TODO: Cache ref to AnimInstance in BeginPlay()
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && HitReactMontage)
+	{
+		// Cancel existing attack if it's happening
+		if (AnimInstance->Montage_IsPlaying(MeleeAttackMontage)) AnimInstance->Montage_Stop(0.f, MeleeAttackMontage);
+
+		int32 const SectionCount = MeleeAttackMontage->CompositeSections.Num();
+
+		FName SectionName = GetAttackSectionName(SectionCount);
+		int32 const SectionIndex = MeleeAttackMontage->GetSectionIndex(SectionName);
+		float const SectionLength = MeleeAttackMontage->GetSectionLength(SectionIndex);
+
+		// Disable enemy movement then re-enable after timer
+		GetCharacterMovement()->DisableMovement();
+
+		AnimInstance->Montage_Play(MeleeAttackMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, MeleeAttackMontage);
+		GetWorldTimerManager().SetTimer(TimerAttack, this, &AEnemyMelee::ResetMovementWalking, SectionLength);
+	}
+
+	return DamageAmount;
 }

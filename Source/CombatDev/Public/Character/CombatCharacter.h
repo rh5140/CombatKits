@@ -28,8 +28,11 @@ public:
 	virtual void ActivateRightWeapon();
 	virtual void DeactivateRightWeapon();
 
-
 	float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	// Referenced code by Mythical Gamer Dev in Basic Attack Combos in Unreal Engine 5 | C++ (https://www.youtube.com/watch?v=QoVFM0uQ8qk)
+	UFUNCTION()
+	void HandleOnMontageNotifyBegin(FName a_nNotifyName, const FBranchingPointNotifyPayload& a_pBranchingPayload);
 
 protected:
 	// Called when the game starts or when spawned
@@ -108,4 +111,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	float MaxHealth;
+
+	int m_iCombatAttackIndex = 0;
+
 };
