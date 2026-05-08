@@ -62,8 +62,7 @@ void ACombatCharacter::BeginPlay()
 	RightWeaponCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	RightWeaponCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
-	// TODO: Cache AnimInstance in BeginPlay instead of calling at runtime
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance != nullptr)
 	{
 		AnimInstance->OnPlayMontageNotifyBegin.AddDynamic(this, &ACombatCharacter::HandleOnMontageNotifyBegin);
@@ -139,8 +138,6 @@ void ACombatCharacter::Recall()
 
 void ACombatCharacter::PlayAnimMontage(UAnimMontage* MontageToPlay, FName SectionName)
 {
-	// TODO: Cache AnimInstance in BeginPlay instead of calling at runtime
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && MontageToPlay)
 	{
 		if (!AnimInstance->Montage_IsPlaying(MontageToPlay))
@@ -165,8 +162,6 @@ void ACombatCharacter::EnableWalk()
 
 void ACombatCharacter::MainAttack()
 {
-	// TODO: Cache AnimInstance in BeginPlay instead of calling at runtime
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	if (AnimInstance && MainAttackMontage)
 	{
 		if (!AnimInstance->Montage_IsPlaying(MainAttackMontage))
@@ -188,8 +183,6 @@ void ACombatCharacter::HandleOnMontageNotifyBegin(FName a_nNotifyName, const FBr
 
 	if (m_iCombatAttackIndex < 0)
 	{
-		// TODO: Cache AnimInstance in BeginPlay instead of calling at runtime
-		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if (AnimInstance != nullptr)
 		{
 			AnimInstance->Montage_Stop(0.f, MainAttackMontage);

@@ -112,6 +112,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	float MaxHealth;
 
+	UAnimInstance* AnimInstance;
+
 	int m_iCombatAttackIndex = 0;
 
 };

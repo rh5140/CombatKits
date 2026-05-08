@@ -65,4 +65,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* HitReactMontage;
+
+	UAnimInstance* AnimInstance;
 };

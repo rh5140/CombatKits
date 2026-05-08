@@ -39,8 +39,7 @@ void AEnemyMelee::SetUpCollisionBox(UBoxComponent* WeaponCollision)
 // Play random enemy attack montage
 void AEnemyMelee::MeleeAttack()
 {
-	// TODO: Cache ref to AnimInstance in BeginPlay()
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance = GetMesh()->GetAnimInstance();
 
 	if (AnimInstance && MeleeAttackMontage)
 	{
@@ -148,8 +147,7 @@ void AEnemyMelee::OnLeftWeaponOverlap(UPrimitiveComponent* OverlappedComponent, 
 float AEnemyMelee::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	// TODO: Cache ref to AnimInstance in BeginPlay()
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	
 	if (AnimInstance && HitReactMontage)
 	{
 		// Cancel existing attack if it's happening
