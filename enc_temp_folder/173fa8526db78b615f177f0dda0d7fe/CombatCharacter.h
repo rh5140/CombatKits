@@ -114,6 +114,8 @@ private:
 
 	UAnimInstance* AnimInstance;
 
+	int m_iCombatAttackIndex = 0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage", meta = (AllowPrivateAccess = "true"))
 	TArray<UAnimMontage*> AttackComboMontages;
 

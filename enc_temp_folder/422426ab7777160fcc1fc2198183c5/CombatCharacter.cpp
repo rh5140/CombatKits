@@ -182,7 +182,6 @@ void ACombatCharacter::MainAttack()
 
 void ACombatCharacter::HandleOnMontageNotifyBegin(FName a_nNotifyName, const FBranchingPointNotifyPayload& a_pBranchingPayload)
 {
-	// End combo
 	ComboIndex = 0;
 }
 
