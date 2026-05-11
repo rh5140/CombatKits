@@ -2,8 +2,10 @@
 
 #pragma once
 
+#include "Components/SphereComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "CharacterProjectile.generated.h"
 
 UCLASS()
@@ -21,13 +23,22 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere)
 	float BaseDamage;
 
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* ProjectileMesh;
+
+	UPROPERTY(EditAnywhere)
+	UProjectileMovementComponent* ProjectileComponent;
+
+	UPROPERTY(EditAnywhere)
+	USphereComponent* CollisionComponent;
+
+	UPROPERTY(EditAnywhere)
+	float PhysicsForce = 100.0f;
 
 };

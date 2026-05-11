@@ -222,7 +222,7 @@ void ACombatCharacter::DeactivateRightWeapon()
 void ACombatCharacter::Skill()
 {
 	PlayAnimMontage(SkillMontage);
-	GetWorld()->SpawnActor<ACharacterProjectile>(WindProjectile, GetActorLocation() + FVector(100.0f, 0.0f, 50.0f), GetActorRotation());
+	GetWorld()->SpawnActor<ACharacterProjectile>(WindProjectile, GetActorLocation() + FVector(100.0f, 50.f, 0.0f), GetActorRotation());
 }
 
 float ACombatCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
