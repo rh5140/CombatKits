@@ -219,6 +219,11 @@ void ACombatCharacter::DeactivateRightWeapon()
 	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void ACombatCharacter::Skill()
+{
+	PlayAnimMontage(SkillMontage);
+}
+
 float ACombatCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	Health -= DamageAmount;
@@ -260,5 +265,6 @@ void ACombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	// Combat abilities
 	PlayerInputComponent->BindAction("Recall", IE_Pressed, this, &ACombatCharacter::Recall);
 	PlayerInputComponent->BindAction("MainAttack", IE_Pressed, this, &ACombatCharacter::MainAttack);
+	PlayerInputComponent->BindAction("Skill", IE_Pressed, this, &ACombatCharacter::Skill);
 }
 

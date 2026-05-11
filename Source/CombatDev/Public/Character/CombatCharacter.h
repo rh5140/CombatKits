@@ -65,6 +65,8 @@ protected:
 	// LMB main attack
 	void MainAttack();
 
+	void Skill();
+
 	// Right weapon overlap
 	UFUNCTION()
 	void OnRightWeaponOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -120,5 +122,12 @@ private:
 	int ComboIndex = 0;
 
 	int ComboMax = 0;
+
+	float SkillCooldownTime;
+	bool SkillAvailable;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* SkillMontage;
 
 };
