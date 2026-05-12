@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "CharacterProjectile.h"
 #include "Components/BoxComponent.h"
 #include "CombatCharacterInterface.h"
 #include "CombatCharacter.generated.h"
@@ -65,7 +66,8 @@ protected:
 	// LMB main attack
 	void MainAttack();
 
-	void Skill();
+	void UseSkill();
+	void EnableSkill();
 
 	// Right weapon overlap
 	UFUNCTION()
@@ -125,7 +127,7 @@ private:
 
 	float SkillCooldownTime;
 	bool SkillAvailable;
-
+	FTimerHandle SkillCooldownTimer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage", meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* SkillMontage;

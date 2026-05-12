@@ -16,7 +16,9 @@ ACombatCharacter::ACombatCharacter():
 	RunSpeed(600.f),
 	BaseDamage(20.f),
 	Health(200.f),
-	MaxHealth(200.f)
+	MaxHealth(200.f),
+	SkillCooldownTime(5.f),
+	SkillAvailable(true)
 {
  	// Create spring arm
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
@@ -219,10 +221,17 @@ void ACombatCharacter::DeactivateRightWeapon()
 	RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-void ACombatCharacter::Skill()
+void ACombatCharacter::UseSkill()
 {
+	if (!SkillAvailable) return;
 	PlayAnimMontage(SkillMontage);
-	GetWorld()->SpawnActor<ACharacterProjectile>(WindProjectile, GetActorLocation() + FVector(100.0f, 50.f, 0.0f), GetActorRotation());
+	GetWorld()->SpawnActor<ACharacterProjectile>(WindProjectile, GetActorLocation() + FVector(100.0f, 0.0f, 50.0f), GetActorRotation());
+	GetWorldTimerManager().SetTimer(SkillCooldownTimer, this, &ACombatCharacter::EnableSkill, SkillCooldownTime);
+}
+
+void ACombatCharacter::EnableSkill()
+{
+	SkillAvailable = true;
 }
 
 float ACombatCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -266,6 +275,6 @@ void ACombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	// Combat abilities
 	PlayerInputComponent->BindAction("Recall", IE_Pressed, this, &ACombatCharacter::Recall);
 	PlayerInputComponent->BindAction("MainAttack", IE_Pressed, this, &ACombatCharacter::MainAttack);
-	PlayerInputComponent->BindAction("Skill", IE_Pressed, this, &ACombatCharacter::Skill);
+	PlayerInputComponent->BindAction("Skill", IE_Pressed, this, &ACombatCharacter::UseSkill);
 }
 
