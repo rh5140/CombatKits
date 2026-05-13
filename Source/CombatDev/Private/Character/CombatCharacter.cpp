@@ -252,6 +252,11 @@ float ACombatCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Damag
 	return DamageAmount;
 }
 
+float ACombatCharacter::GetSkillCooldownRemaining()
+{
+	return GetWorldTimerManager().GetTimerElapsed(SkillCooldownTimer);
+}
+
 // Called to bind functionality to input
 void ACombatCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {

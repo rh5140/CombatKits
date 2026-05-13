@@ -35,6 +35,9 @@ public:
 	UFUNCTION()
 	void HandleOnMontageNotifyBegin(FName a_nNotifyName, const FBranchingPointNotifyPayload& a_pBranchingPayload);
 
+	UFUNCTION(BlueprintCallable)
+	float GetSkillCooldownRemaining();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -125,8 +128,12 @@ private:
 
 	int ComboMax = 0;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	float SkillCooldownTime;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadonly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
 	bool SkillAvailable;
+
 	FTimerHandle SkillCooldownTimer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Montage", meta = (AllowPrivateAccess = "true"))
