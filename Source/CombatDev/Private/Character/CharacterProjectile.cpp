@@ -13,7 +13,6 @@ ACharacterProjectile::ACharacterProjectile() :
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionComponent"));
 	ProjectileMesh->SetupAttachment(CollisionComponent);
 	CollisionComponent->InitSphereRadius(5.0f);
-	CollisionComponent->OnComponentHit.AddDynamic(this, &ACharacterProjectile::OnHit);
 	RootComponent = CollisionComponent;
 	ProjectileComponent->UpdatedComponent = CollisionComponent;
 }
@@ -22,7 +21,8 @@ ACharacterProjectile::ACharacterProjectile() :
 void ACharacterProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	CollisionComponent->OnComponentHit.AddDynamic(this, &ACharacterProjectile::OnHit);
 }
 
 // Projectile code from https://dev.epicgames.com/documentation/unreal-engine/coder-08-implement-a-projectile-in-unreal-engine?lang=en-US
